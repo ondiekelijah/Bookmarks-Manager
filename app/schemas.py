@@ -38,6 +38,7 @@ class BookmarkBase(BaseModel):
     url: str
 
 
+
 class BookmarkCreate(BookmarkBase):
     pass
 
@@ -47,8 +48,9 @@ class BookmarkCreate(BookmarkBase):
 
 class Bookmark(BookmarkBase):
     id: int
+    short_url: str
+    visits: str
     created_at: datetime
-    user_id: int
     user: UserOut
 
     class Config:
