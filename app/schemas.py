@@ -38,10 +38,8 @@ class BookmarkBase(BaseModel):
     url: str
 
 
-
 class BookmarkCreate(BookmarkBase):
     pass
-
 
 # Handles us sending back data to the users
 
@@ -52,6 +50,15 @@ class Bookmark(BookmarkBase):
     visits: str
     created_at: datetime
     user: UserOut
+
+    class Config:
+        orm_mode = True
+
+
+    
+class BookmarkOut(BookmarkBase):
+    id: int
+    created_at: datetime
 
     class Config:
         orm_mode = True

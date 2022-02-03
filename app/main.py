@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends
+from fastapi.responses import JSONResponse
 from starlette.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
@@ -27,6 +28,11 @@ app.include_router(user.router)
 app.include_router(auth.router)
 
 
+@app.get("/")
+def root():
+    return {"message" : "Hello, mate, follow me on Twitter @dev_elie"}
+
+
 @app.get("/find/{short_url}")
 def redirect(short_url: str, db: Session = Depends(get_db)):
 
@@ -39,4 +45,6 @@ def redirect(short_url: str, db: Session = Depends(get_db)):
     response = RedirectResponse(url=bookmark.url)
 
     return response
+
+
 

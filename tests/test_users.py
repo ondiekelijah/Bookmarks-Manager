@@ -6,7 +6,7 @@ from app.config import settings
 
 def test_create_user(client):
     res = client.post(
-        "/users/", json={"email": "test@gmail.com", "password": "test123"}
+        "/users/", json={"email": "test@gmail.com", "password": "Test123&^$"}
     )
     new_user = schemas.UserOut(**res.json())
     assert new_user.email == "test@gmail.com"

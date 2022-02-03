@@ -8,15 +8,43 @@ from ..database import get_db
 
 router = APIRouter(prefix="/bookmarks", tags=["Bookmarks"])
 
+# Get bookmark stats
+@router.get("/stats")
+def bookmark_stats(
+    db: Session = Depends(get_db),
+    current_user: int = Depends(oath2.get_current_user),
+):
+    data = []
+
+    items = (
+        db.query(models.Bookmarks)
+        .filter(models.Bookmarks.user_id == current_user.id)
+        .all()
+    )
+
+    for item in items:
+        new_link = {
+            "visits": item.visits,
+            "url": item.url,
+            "id": item.id,
+            "short_url": item.short_url,
+        }
+
+        data.append(new_link)
+
+    return data
+
+
 # Fetch all user bookmarks
 
+
 @router.get("/", response_model=List[schemas.Bookmark])
-def get_posts(
+def get_user_bookmarks(
     db: Session = Depends(get_db),
     limit: int = 10,
     skip: int = 0,
     search: Optional[str] = "",
-    current_user: int = Depends(oath2.get_current_user)
+    current_user: int = Depends(oath2.get_current_user),
 ):
 
     bookmarks = (
@@ -28,7 +56,7 @@ def get_posts(
                 models.Bookmarks.body.ilike(f"%{search}%"),
                 models.Bookmarks.url.ilike(f"%{search}%"),
                 models.Bookmarks.short_url.ilike(f"%{search}%"),
-            )
+            ),
         )
         .limit(limit)
         .offset(skip)
@@ -37,9 +65,11 @@ def get_posts(
 
     return bookmarks
 
+
 #  Create a new Bookmark
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Bookmark)
+
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.BookmarkOut)
 def create_bookmark(
     bookmark: schemas.BookmarkCreate,
     db: Session = Depends(get_db),
@@ -53,11 +83,11 @@ def create_bookmark(
         )
 
     if db.query(models.Bookmarks).filter(models.Bookmarks.url == bookmark.url).first():
-    
+
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Bookmark already exists",
-        ) 
+        )
 
     try:
         new_bookmark = models.Bookmarks(user_id=current_user.id, **bookmark.dict())
@@ -76,8 +106,13 @@ def create_bookmark(
 
 # Fetch Bookmark by id
 
+
 @router.get("/{id}", response_model=schemas.Bookmark)
-def get_bookmark(id: int, db: Session = Depends(get_db),current_user: int = Depends(oath2.get_current_user)):
+def get_bookmark(
+    id: int,
+    db: Session = Depends(get_db),
+    current_user: int = Depends(oath2.get_current_user),
+):
 
     bookmark = db.query(models.Bookmarks).filter(models.Bookmarks.id == id).first()
 
@@ -89,10 +124,12 @@ def get_bookmark(id: int, db: Session = Depends(get_db),current_user: int = Depe
 
     return bookmark
 
+
 # Update Bookmark
 
-@router.put("/{id}", response_model=schemas.Bookmark)
-def update_post(
+
+@router.put("/{id}", response_model=schemas.BookmarkOut)
+def update_bookmark(
     id: int,
     updated_post: schemas.BookmarkCreate,
     db: Session = Depends(get_db),
@@ -119,7 +156,7 @@ def update_post(
         updated_post.dict(),
         synchronize_session=False,
     )
-    
+
     db.commit()
 
     return bookmark_query.first()
@@ -127,8 +164,9 @@ def update_post(
 
 # Delete Bookmark
 
+
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(
+def delete_bookmark(
     id: int,
     db: Session = Depends(get_db),
     current_user: int = Depends(oath2.get_current_user),

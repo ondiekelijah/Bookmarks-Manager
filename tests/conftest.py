@@ -58,7 +58,7 @@ def client(session):
 
 @pytest.fixture()
 def test_user(client):
-    user_data = {"email": "test@gmail.com", "password": "test123"}
+    user_data = {"email": "test@gmail.com", "password": "Test123&^$"}
     res = client.post("/users/", json=user_data)
     new_user = res.json()
     new_user["password"] = user_data["password"]
@@ -68,7 +68,7 @@ def test_user(client):
 
 @pytest.fixture()
 def test_user2(client):
-    user_data = {"email": "test2@gmail.com", "password": "test123"}
+    user_data = {"email": "test2@gmail.com", "password": "Test123&^$"}
     res = client.post("/users/", json=user_data)
     new_user = res.json()
     new_user["password"] = user_data["password"]
@@ -93,28 +93,40 @@ def authorized_client(client, token):
 
 
 @pytest.fixture()
-def test_posts(test_user, test_user2, session):
-    posts_data = [
+def test_bookmarks(test_user, test_user2, session):
+    data = [
         {
-            "title": "first title",
-            "content": "first content",
-            "owner_id": test_user["id"],
+            "body": "GitHub",
+            "url": "https://github.com/Dev-Elie",
+            "user_id": test_user["id"],
         },
-        {"title": "2nd title", "content": "2nd content", "owner_id": test_user["id"]},
-        {"title": "3rd title", "content": "3rd content", "owner_id": test_user["id"]},
-        {"title": "4th title", "content": "4th content", "owner_id": test_user2["id"]},
+        {
+            "body": "Twitter",
+            "url": "https://twitter.com/dev_elie",
+            "user_id": test_user["id"],
+        },
+        {
+            "body": "Linkedin",
+            "url": "https://www.linkedin.com/in/ondiek-elijah-2aaba4198/",
+            "user_id": test_user["id"],
+        },
+        {
+            "body": "Hashnode",
+            "url": "https://develie.hashnode.dev/",
+            "user_id": test_user2["id"],
+        },
     ]
 
-    def create_post_model(post):
-        return models.Post(**post)
+    def create_bookmark_model(bookmark):
+        return models.Bookmarks(**bookmark)
 
-    mapped_posts = map(create_post_model, posts_data)
-    posts = list(mapped_posts)
+    mapped_bookmarks = map(create_bookmark_model, data)
+    bookmarks = list(mapped_bookmarks)
 
-    session.add_all(posts)
+    session.add_all(bookmarks)
     session.commit()
 
-    posts = session.query(models.Post).all()
+    bookmarks = session.query(models.Bookmarks).all()
 
     # Returns an sqlalchemy model
-    return posts
+    return bookmarks
