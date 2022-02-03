@@ -30,7 +30,7 @@ app.include_router(auth.router)
 
 @app.get("/")
 def root():
-    return {"message" : "Hello, mate, follow me on Twitter @dev_elie"}
+    return {"Response" : "Hello, mate, follow me on Twitter @dev_elie"}
 
 
 @app.get("/find/{short_url}")
