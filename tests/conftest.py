@@ -30,9 +30,9 @@ def session():
     and use it for all the tests,
     so we create a database connection that is independent of the main app.
     """
-    Base.metadata.create_all(bind=engine)
     Base.metadata.drop_all(bind=engine)
-
+    Base.metadata.create_all(bind=engine)
+    
     db = TestingSessionLocal()
     try:
         yield db
