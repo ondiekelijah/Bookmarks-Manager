@@ -13,11 +13,32 @@ Read the docs [here](https://develiebookmarks-api.herokuapp.com/docs)
 
 `cd directory path`
 
-3. Install the requirements from the requirements.txt file.
+3. Create a virtual environment & activate it
+
+**Windows**
+          
+```bash
+#create a venv
+py -3 -m venv venv
+# activate venv
+venv\Scripts\activate
+
+```
+          
+**macOS/Linux**
+          
+```bash
+#create a venv
+python3 -m venv venv
+# activate venv
+source venv/bin/activate
+
+```
+4. Install the requirements from the requirements.txt file.
 
 `pip install -r requirements.txt`
 
-4. Create a `.env` file in the root of the directory then add the following contents, adding values for each depending on your configs.
+5. Create a `.env` file in the root of the directory then add the following contents, adding values for each depending on your configs.
 
 ```
 DATABASE_HOSTNAME=
@@ -29,10 +50,10 @@ SECRET_KEY=
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=
 ```
-5. Run a database migration
+6. Run a database migration
 
 ` alembic upgrade head`
 
-6. Start the server
+7. Start the server
 
 `uvicorn app.main:app --reload`
