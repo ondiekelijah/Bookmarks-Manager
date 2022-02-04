@@ -10,7 +10,7 @@ jobs:
       DATABASE_HOSTNAME: localhost
       DATABASE_PORT: 5432
       DATABASE_PASSWORD: postgres
-      DATABASE_NAME: bookmarks_api_test
+      DATABASE_NAME: bookmarks_api
       DATABASE_USERNAME: postgres
       SECRET_KEY: super-secret
       ALGORITHM: HS256
