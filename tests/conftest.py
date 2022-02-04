@@ -21,6 +21,9 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+# Set up the database once
+Base.metadata.drop_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 @pytest.fixture()
 def session():
@@ -29,8 +32,8 @@ def session():
     and use it for all the tests,
     so we create a database connection that is independent of the main app.
     """
-    Base.metadata.drop_all(bind=engine)
-    Base.metadata.create_all(bind=engine)
+    # Base.metadata.drop_all(bind=engine)
+    # Base.metadata.create_all(bind=engine)
     db = TestingSessionLocal()
     try:
         yield db
