@@ -21,8 +21,9 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
-          POSTGRES_DB: ${{secrets.TEST_DATABASE_NAME}}
+          POSTGRES_DB: github_actions        
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
         ports:
           - 5432:5432
         options: >-
