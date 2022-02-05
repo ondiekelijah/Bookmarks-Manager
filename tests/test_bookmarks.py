@@ -1,6 +1,7 @@
 import pytest
 from jose import jwt
 from app import schemas
+from app import models
 from app.config import settings
 
 
@@ -96,7 +97,7 @@ def test_delete_other_user_bookmark(authorized_client, test_user, test_bookmarks
         f"/bookmarks/{test_bookmarks[3].id}")
     assert res.status_code == 403
 
-def test_update_post(authorized_client, test_user, test_bookmarks):
+def test_update_bookmark(authorized_client, test_user, test_bookmarks):
     data = {
         "url": "https://www.linkedin.com/in/ondiek-elijah-2aaba4198/",
         "body": "Dev Elie's Profile",
