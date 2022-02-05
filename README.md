@@ -1,6 +1,8 @@
 # BookmarksAPI
 A bookmark manager API that allows for simple bookmark management. User creation and authentication with access tokens, adding bookmarks, updating, deleting, and viewing existing bookmarks are all features. It also offers bookmark link visit tracking and statistics.
 
+[![Build and Test](https://github.com/Dev-Elie/BookmarksAPI/actions/workflows/build-deploy.yml/badge.svg)](https://github.com/Dev-Elie/BookmarksAPI/actions/workflows/build-deploy.yml)
+
 Read the docs [here](https://develiebookmarks-api.herokuapp.com/docs)
 
 # Installation
