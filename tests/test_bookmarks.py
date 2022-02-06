@@ -23,119 +23,119 @@ def test_get_all_bookmarks(authorized_client, test_bookmarks):
     assert res.status_code == 200
 
 
-def test_get_one_bookmark(authorized_client, test_bookmarks):
-    res = authorized_client.get(f"bookmarks/{test_bookmarks[0].id}")
-    assert res.status_code == 200
+# def test_get_one_bookmark(authorized_client, test_bookmarks):
+#     res = authorized_client.get(f"bookmarks/{test_bookmarks[0].id}")
+#     assert res.status_code == 200
 
-    bookmark = schemas.Bookmark(**res.json())
+#     bookmark = schemas.Bookmark(**res.json())
 
-    assert bookmark.id == test_bookmarks[0].id
-    assert bookmark.body == test_bookmarks[0].body
-    assert bookmark.url == test_bookmarks[0].url
-
-
-def test_get_one_bookmark_not_exist(authorized_client, test_bookmarks):
-    res = authorized_client.get(f"/bookmarks/234")
-    assert res.status_code == 404
+#     assert bookmark.id == test_bookmarks[0].id
+#     assert bookmark.body == test_bookmarks[0].body
+#     assert bookmark.url == test_bookmarks[0].url
 
 
-@pytest.mark.parametrize(
-    "body, url",
-    [
-        ("Github", "https://github.com/Elie"),
-        ("Twitter 2", "https://twitter.com/elie"),
-        ("Twitter 3", "https://twitter.com/dev"),
-        ("Twitter 4", "https://twitter.com/deve")
-
-    ],
-)
-def test_create_bookmark(
-    authorized_client, test_bookmarks, url, body
-):
-    res = authorized_client.post(
-        "/bookmarks/", json={"url": url, "body": body}
-    )
-
-    new_bookmark = schemas.BookmarkOut(**res.json()) 
-
-    assert res.status_code == 201
-    assert new_bookmark.url == url
-    assert new_bookmark.body == body
+# def test_get_one_bookmark_not_exist(authorized_client, test_bookmarks):
+#     res = authorized_client.get(f"/bookmarks/234")
+#     assert res.status_code == 404
 
 
-def test_create_bookmark_unauthorized_user(client, test_bookmarks):
-    res = client.post(
-        "/bookmarks/",
-        json={
-            "url": "https://github.com/Dev-Elie",
-            "body": "Twitter",
+# @pytest.mark.parametrize(
+#     "body, url",
+#     [
+#         ("Github", "https://github.com/Elie"),
+#         ("Twitter 2", "https://twitter.com/elie"),
+#         ("Twitter 3", "https://twitter.com/dev"),
+#         ("Twitter 4", "https://twitter.com/deve")
 
-        },
-    )
+#     ],
+# )
+# def test_create_bookmark(
+#     authorized_client, test_bookmarks, url, body
+# ):
+#     res = authorized_client.post(
+#         "/bookmarks/", json={"url": url, "body": body}
+#     )
 
-    assert res.status_code == 401
+#     new_bookmark = schemas.BookmarkOut(**res.json()) 
 
-
-def test_delete_bookmark_unauthorized_user(client, test_bookmarks):
-    res = client.delete(f"/bookmarks/{test_bookmarks[0].id}")
-    assert res.status_code == 401
-
-
-def test_delete_bookmark_authorized_user(authorized_client, test_bookmarks):
-    res = authorized_client.delete(f"/bookmarks/{test_bookmarks[0].id}")
-    assert res.status_code == 204
-
-
-def test_delete_bookmark_non_exist(authorized_client, test_bookmarks):
-    res = authorized_client.delete(f"/bookmarks/8000000")
-
-    assert res.status_code == 404
-
-def test_delete_other_user_bookmark(authorized_client, test_bookmarks):
-    res = authorized_client.delete(
-        f"/bookmarks/{test_bookmarks[3].id}")
-    assert res.status_code == 403
-
-def test_update_bookmark(authorized_client, test_bookmarks):
-    data = {
-        "url": "https://www.linkedin.com/in/ondiek-elijah-2aaba4198/",
-        "body": "Dev Elie's Profile",
-        "id": test_bookmarks[0].id
-    }
-
-    res = authorized_client.put(f"/bookmarks/{test_bookmarks[0].id}", json=data)
-    updated_bookmark = models.Bookmarks(**res.json())
-
-    assert res.status_code == 200
-    assert updated_bookmark.url == data['url']
-    assert updated_bookmark.body == data['body']
+#     assert res.status_code == 201
+#     assert new_bookmark.url == url
+#     assert new_bookmark.body == body
 
 
-def test_update_other_user_bookmark(authorized_client, test_bookmarks):
-    data = {
-        "url": "https://www.linkedin.com/in/ondiek-elijah-2aaba4198/",
-        "body": "Linkedin Profile Updated",
-        "id": test_bookmarks[3].id
+# def test_create_bookmark_unauthorized_user(client, test_bookmarks):
+#     res = client.post(
+#         "/bookmarks/",
+#         json={
+#             "url": "https://github.com/Dev-Elie",
+#             "body": "Twitter",
 
-    }
-    res = authorized_client.put(f"/bookmarks/{test_bookmarks[3].id}", json=data)
-    assert res.status_code == 403
+#         },
+#     )
 
-
-def test_update_bookmark_unauthorized_user(client, test_bookmarks):
-    res = client.put(
-        f"/bookmarks/{test_bookmarks[0].id}")
-    assert res.status_code == 401
+#     assert res.status_code == 401
 
 
-def test_update_bookmark_non_exist(authorized_client, test_bookmarks):
-    data = {
-        "url": "https://www.linkedin.com/in/ondiek-elijah-2aaba4198/",
-        "body": "Still Linkedin",
-        "id": test_bookmarks[3].id
+# def test_delete_bookmark_unauthorized_user(client, test_bookmarks):
+#     res = client.delete(f"/bookmarks/{test_bookmarks[0].id}")
+#     assert res.status_code == 401
 
-    }
-    res = authorized_client.put(
-        f"/bookmarks/000000", json=data)
 
-    assert res.status_code == 404
+# def test_delete_bookmark_authorized_user(authorized_client, test_bookmarks):
+#     res = authorized_client.delete(f"/bookmarks/{test_bookmarks[0].id}")
+#     assert res.status_code == 204
+
+
+# def test_delete_bookmark_non_exist(authorized_client, test_bookmarks):
+#     res = authorized_client.delete(f"/bookmarks/8000000")
+
+#     assert res.status_code == 404
+
+# def test_delete_other_user_bookmark(authorized_client, test_bookmarks):
+#     res = authorized_client.delete(
+#         f"/bookmarks/{test_bookmarks[3].id}")
+#     assert res.status_code == 403
+
+# def test_update_bookmark(authorized_client, test_bookmarks):
+#     data = {
+#         "url": "https://www.linkedin.com/in/ondiek-elijah-2aaba4198/",
+#         "body": "Dev Elie's Profile",
+#         "id": test_bookmarks[0].id
+#     }
+
+#     res = authorized_client.put(f"/bookmarks/{test_bookmarks[0].id}", json=data)
+#     updated_bookmark = models.Bookmarks(**res.json())
+
+#     assert res.status_code == 200
+#     assert updated_bookmark.url == data['url']
+#     assert updated_bookmark.body == data['body']
+
+
+# def test_update_other_user_bookmark(authorized_client, test_bookmarks):
+#     data = {
+#         "url": "https://www.linkedin.com/in/ondiek-elijah-2aaba4198/",
+#         "body": "Linkedin Profile Updated",
+#         "id": test_bookmarks[3].id
+
+#     }
+#     res = authorized_client.put(f"/bookmarks/{test_bookmarks[3].id}", json=data)
+#     assert res.status_code == 403
+
+
+# def test_update_bookmark_unauthorized_user(client, test_bookmarks):
+#     res = client.put(
+#         f"/bookmarks/{test_bookmarks[0].id}")
+#     assert res.status_code == 401
+
+
+# def test_update_bookmark_non_exist(authorized_client, test_bookmarks):
+#     data = {
+#         "url": "https://www.linkedin.com/in/ondiek-elijah-2aaba4198/",
+#         "body": "Still Linkedin",
+#         "id": test_bookmarks[3].id
+
+#     }
+#     res = authorized_client.put(
+#         f"/bookmarks/000000", json=data)
+
+#     assert res.status_code == 404
