@@ -29,7 +29,6 @@ def test_get_one_bookmark(authorized_client, test_bookmarks):
 
     bookmark = schemas.Bookmark(**res.json())
 
-    # Refer to scchemas
     assert bookmark.id == test_bookmarks[0].id
     assert bookmark.body == test_bookmarks[0].body
     assert bookmark.url == test_bookmarks[0].url
