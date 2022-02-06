@@ -13,7 +13,6 @@ jobs:
       DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
       DATABASE_NAME: ${{secrets.DATABASE_NAME}}
       DATABASE_USERNAME: ${{secrets.DATABASE_USERNAME}}
-      TEST_DATABASE: ${{secrets.TEST_DATABASE}}
       SECRET_KEY: ${{secrets.SECRET_KEY}}
       ALGORITHM: ${{secrets.ALGORITHM}}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}}
@@ -23,7 +22,7 @@ jobs:
         image: postgres:latest
         env:
           POSTGRES_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
-          POSTGRES_DB: ${{secrets.TEST_DATABASE}}
+          POSTGRES_DB: ${{secrets.DATABASE_NAME}}_test
           POSTGRES_USER: ${{secrets.DATABASE_USERNAME}}
         ports:
           - 5432:5432
@@ -47,7 +46,7 @@ jobs:
       - name: test with pytest
         run: |
           pip install pytest
-          pytest -v
+          pytest
 
 
           
